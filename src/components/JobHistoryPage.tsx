@@ -46,14 +46,14 @@ const STATUS_STYLES: Record<JobStatus, { bg: string; color: string; border: stri
 
 // ─── Sub-components ───────────────────────────────────────────────
 
-// const StatusBadge: React.FC<{ status: JobStatus }> = ({ status }) => {
-//     const s = STATUS_STYLES[status];
-//     return (
-//         <span className="jh-badge" style={{ background: s.bg, color: s.color, borderColor: s.border }}>
-//             {status}
-//         </span>
-//     );
-// };
+const StatusBadge: React.FC<{ status: JobStatus }> = ({ status }) => {
+    const s = STATUS_STYLES[status];
+    return (
+        <span className="jh-badge" style={{ background: s.bg, color: s.color, borderColor: s.border }}>
+            {status}
+        </span>
+    );
+};
 
 const ProgressBar: React.FC<{ value: number; status: JobStatus }> = ({ value, status }) => {
     const color = status === "Processing" ? "#4a90d9" : status === "Failed" ? "#d94040" : "#2e8b57";
@@ -71,7 +71,7 @@ const ProgressBar: React.FC<{ value: number; status: JobStatus }> = ({ value, st
 
 const JobRow: React.FC<{ job: Job }> = ({ job }) => {
     const [expanded, setExpanded] = useState(false);
-    const s = STATUS_STYLES[job.status];
+
 
     return (
         <>
