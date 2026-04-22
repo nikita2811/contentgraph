@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
+import api from "../../api/axiosInstance";
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
@@ -47,6 +48,7 @@ const Register: React.FC = () => {
         if (!agreed) { alert("Please agree to the terms."); return; }
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1400));
+        api.post('/api/auth/signup', form)
         setLoading(false);
         setDone(true);
     };
