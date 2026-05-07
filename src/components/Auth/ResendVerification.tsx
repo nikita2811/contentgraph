@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
 import api from "../../api/axiosInstance";
+import toast from "react-hot-toast";
 
 
 
@@ -13,6 +14,9 @@ const ResendVerification: React.FC = () => {
     const [sent, setSent] = useState(false);
     const [cooldown, setCooldown] = useState(0);
 
+
+
+
     useEffect(() => {
         if (cooldown <= 0) return;
         const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
@@ -22,8 +26,8 @@ const ResendVerification: React.FC = () => {
     const handleSubmit = async (ev: React.FormEvent) => {
         ev.preventDefault();
         if (!email) {
+            toast.error("Email is required")
             setError("Email is required");
-            showError("Email is required");
             return;
         }
         setLoading(true);
@@ -32,16 +36,14 @@ const ResendVerification: React.FC = () => {
             api.post('auth/resend-verify-email', {
                 'email': email
             })
-            success("Verification email sent successfully");
+            toast.success("Verification email sent successfully");
         } catch (error: any) {
             const message =
                 error.response?.data?.error ||
                 "Something went wrong";
 
             setError(message);
-
-            showError(message);
-            showError("Something went wrong");
+            toast.error(message)
         } finally {
             setLoading(false);
         }
