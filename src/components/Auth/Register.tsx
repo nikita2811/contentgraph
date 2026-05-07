@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
 import api from "../../api/axiosInstance";
+import toast from "react-hot-toast";
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
-    const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+    const [form, setForm] = useState({ name: "", email: "", password: "", confirm_password: "" });
     const [errors, setErrors] = useState<Partial<typeof form>>({});
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
@@ -23,8 +24,8 @@ const Register: React.FC = () => {
         else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
         if (!form.password) e.password = "Password is required";
         else if (form.password.length < 8) e.password = "At least 8 characters";
-        if (!form.confirm) e.confirm = "Please confirm your password";
-        else if (form.confirm !== form.password) e.confirm = "Passwords do not match";
+        if (!form.confirm_password) e.confirm_password = "Please confirm your password";
+        else if (form.confirm_password !== form.password) e.confirm_password = "Passwords do not match";
         return e;
     };
 
@@ -44,13 +45,34 @@ const Register: React.FC = () => {
     const handleSubmit = async (ev: React.FormEvent) => {
         ev.preventDefault();
         const e = validate();
-        if (Object.keys(e).length) { setErrors(e); return; }
-        if (!agreed) { alert("Please agree to the terms."); return; }
+        if (Object.keys(e).length) {
+            setErrors(e);
+            toast.error("Please fill in all fields correctly");
+            return; // stops here
+        }
+        if (!agreed) {
+            toast.error("Please agree to terms");
+            return; // stops here
+        }
+
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1400));
-        api.post('/api/auth/signup', form)
+
+        try {
+            await api.post('/auth/signup', form)
+            setDone(true);
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Something went wrong");
+            }
+
+
+
+        }
         setLoading(false);
-        setDone(true);
+
     };
 
     if (done) return (
@@ -58,7 +80,7 @@ const Register: React.FC = () => {
             <div className="success-icon">✉</div>
             <h2 className="card-title">Check your inbox</h2>
             <p className="card-sub">We sent a verification link to <strong>{form.email}</strong></p>
-            <button className="btn btn--ghost btn--full" onClick={() => navigate("/resend-verification")}>
+            <button className="btn btn--ghost btn--full" onClick={() => navigate("/resend-verification-email")}>
                 Resend verification email
             </button>
             <button className="btn btn--link" onClick={() => navigate("/login")}>Back to sign in</button>
@@ -91,7 +113,7 @@ const Register: React.FC = () => {
                     </div>
                 )}
 
-                <Input label="Confirm password" type="password" placeholder="••••••••" value={form.confirm} onChange={set("confirm")} error={errors.confirm}
+                <Input label="Confirm password" type="password" placeholder="••••••••" value={form.confirm_password} onChange={set("confirm_password")} error={errors.confirm_password}
                     icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>} />
 
                 <label className="checkbox-label">

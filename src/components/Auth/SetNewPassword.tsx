@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
+import api from "../../api/axiosInstance";
+import { useSearchParams } from "react-router-dom";
 
 const SetNewPassword: React.FC = () => {
     const navigate = useNavigate();
-    const [form, setForm] = useState({ password: "", confirm: "" });
+    const [form, setForm] = useState({ password: "", confirm_password: "" });
     const [errors, setErrors] = useState<Partial<typeof form>>({});
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
 
     const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm((p) => ({ ...p, [key]: e.target.value }));
@@ -22,15 +26,26 @@ const SetNewPassword: React.FC = () => {
     ];
 
     const handleSubmit = async (ev: React.FormEvent) => {
+        console.log(form)
+        console.log(token)
         ev.preventDefault();
         const e: Partial<typeof form> = {};
         if (!form.password) e.password = "Password is required";
         else if (form.password.length < 8) e.password = "At least 8 characters";
-        if (!form.confirm) e.confirm = "Please confirm your password";
-        else if (form.confirm !== form.password) e.confirm = "Passwords do not match";
+        if (!form.confirm_password) e.confirm_password = "Please confirm your password";
+        else if (form.confirm_password !== form.password) e.confirm_password = "Passwords do not match";
         if (Object.keys(e).length) { setErrors(e); return; }
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
+        try {
+            await api.post('/auth/reset-password', {
+                ...form,
+                token
+            });
+
+        } catch (error: any) {
+            console.log(error)
+        }
         setLoading(false);
         setDone(true);
     };
@@ -40,7 +55,7 @@ const SetNewPassword: React.FC = () => {
             <div className="success-icon">✓</div>
             <h2 className="card-title">Password updated!</h2>
             <p className="card-sub">Your password has been reset successfully.</p>
-            <button className="btn btn--primary btn--full" onClick={() => navigate("/login")}>
+            <button className="btn btn--primary btn--full" onClick={() => navigate("/signin")}>
                 Sign in with new password
             </button>
         </div>
@@ -74,7 +89,7 @@ const SetNewPassword: React.FC = () => {
                     </ul>
                 )}
 
-                <Input label="Confirm password" type="password" placeholder="••••••••" value={form.confirm} onChange={set("confirm")} error={errors.confirm}
+                <Input label="Confirm password" type="password" placeholder="••••••••" value={form.confirm_password} onChange={set("confirm_password")} error={errors.confirm_password}
                     icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>} />
 
                 <button type="submit" className={`btn btn--primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>

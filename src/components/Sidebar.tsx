@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 interface NavItem {
@@ -26,67 +26,115 @@ const navItems: NavItem[] = [
         icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15 15" /></svg>,
     },
     {
-        id: "api", label: "API keys", href: "/api-keys",
-        icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /></svg>,
-    },
-    {
         id: "credits", label: "Credits", href: "/credits",
         icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>,
     },
 ];
 
 interface Props {
+    isOpen: boolean;
+    onClose: () => void;
     creditsRemaining: number;
     creditsTotal: number;
 }
 
-const Sidebar: React.FC<Props> = ({ creditsRemaining, creditsTotal }) => {
+const SidebarDrawer: React.FC<Props> = ({
+    isOpen,
+    onClose,
+    creditsRemaining,
+    creditsTotal,
+}) => {
     const pct = Math.round((creditsRemaining / creditsTotal) * 100);
 
+    // Close on Escape key
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && isOpen) onClose();
+        };
+        document.addEventListener("keydown", handler);
+        return () => document.removeEventListener("keydown", handler);
+    }, [isOpen, onClose]);
+
+    // Lock body scroll when open
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [isOpen]);
+
     return (
-        <aside className="cg-sidebar">
-            {/* <div className="dash-brand">
-                <div className="dash-brand-logo">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
-                        <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM11 9v2H9v2h4V9z" />
-                    </svg>
-                </div>
-            </div> */}
-            <div className="cg-logo">
-                <div className="dash-brand-logo">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
-                        <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM11 9v2H9v2h4V9z" />
-                    </svg>
-                </div>
-                <span className="cg-logo-content">content</span>
-                <span className="cg-logo-graph">graph</span>
-            </div>
+        <>
+            {/* Overlay */}
+            <div
+                className={`cg-drawer-overlay ${isOpen ? "cg-drawer-overlay--visible" : ""}`}
+                onClick={onClose}
+                aria-hidden="true"
+            />
 
-            <nav className="cg-nav">
-                {navItems.map((item) => (
-                    <NavLink
-                        key={item.id}
-                        to={item.href}
-                        className={({ isActive }) =>
-                            `cg-nav-item ${isActive ? "cg-nav-item--active" : ""}`
-                        }
+            {/* Drawer */}
+            <aside
+                className={`cg-drawer ${isOpen ? "cg-drawer--open" : ""}`}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Navigation menu"
+            >
+                {/* Header */}
+                <div className="cg-drawer-header">
+                    <div className="cg-logo">
+                        <div className="dash-brand-logo">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
+                                <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM11 9v2H9v2h4V9z" />
+                            </svg>
+                        </div>
+                        <span className="cg-logo-content">content</span>
+                        <span className="cg-logo-graph">graph</span>
+                    </div>
+                    <button
+                        className="cg-drawer-close"
+                        onClick={onClose}
+                        aria-label="Close menu"
                     >
-                        <span className="cg-nav-icon">{item.icon}</span>
-                        <span className="cg-nav-label">{item.label}</span>
-                    </NavLink>
-                ))}
-            </nav>
-
-            <div className="cg-credits-widget">
-                <p className="cg-credits-label">Credits remaining</p>
-                <p className="cg-credits-value">{creditsRemaining}</p>
-                <div className="cg-credits-bar-track">
-                    <div className="cg-credits-bar-fill" style={{ width: `${pct}%` }} />
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
                 </div>
-                <a href="/credits" className="cg-topup-btn" style={{ textDecoration: "none", display: "block", textAlign: "center" }}>Top up credits</a>
-            </div>
-        </aside>
+
+                {/* Nav links */}
+                <nav className="cg-nav">
+                    {navItems.map((item) => (
+                        <NavLink
+                            key={item.id}
+                            to={item.href}
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                `cg-nav-item ${isActive ? "cg-nav-item--active" : ""}`
+                            }
+                        >
+                            <span className="cg-nav-icon">{item.icon}</span>
+                            <span className="cg-nav-label">{item.label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
+
+                {/* Credits widget */}
+                <div className="cg-credits-widget">
+                    <p className="cg-credits-label">Credits remaining</p>
+                    <p className="cg-credits-value">{creditsRemaining}</p>
+                    <div className="cg-credits-bar-track">
+                        <div className="cg-credits-bar-fill" style={{ width: `${pct}%` }} />
+                    </div>
+                    <a
+                        href="/credits"
+                        className="cg-topup-btn"
+                        onClick={onClose}
+                        style={{ textDecoration: "none", display: "block", textAlign: "center" }}
+                    >
+                        Top up credits
+                    </a>
+                </div>
+            </aside >
+        </>
     );
 };
 
-export default Sidebar;
+export default SidebarDrawer;

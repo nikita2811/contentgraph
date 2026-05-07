@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
+import api from "../../api/axiosInstance";
+import { useSnackbar } from "../snackbar/useSnackbar";
+import { SnackbarContainer } from "../snackbar/Snackbar"
 
 const ResendVerification: React.FC = () => {
     const navigate = useNavigate();
@@ -10,6 +13,9 @@ const ResendVerification: React.FC = () => {
     const [sent, setSent] = useState(false);
     const [cooldown, setCooldown] = useState(0);
 
+
+    const { items, remove, error: showError, success } = useSnackbar();
+
     useEffect(() => {
         if (cooldown <= 0) return;
         const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
@@ -18,11 +24,33 @@ const ResendVerification: React.FC = () => {
 
     const handleSubmit = async (ev: React.FormEvent) => {
         ev.preventDefault();
-        if (!email) { setError("Email is required"); return; }
-        if (!/\S+@\S+\.\S+/.test(email)) { setError("Enter a valid email"); return; }
+        if (!email) {
+            setError("Email is required");
+            showError("Email is required");
+            return;
+        }
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
-        setLoading(false);
+        try {
+            api.post('auth/resend-verify-email', {
+                'email': email
+            })
+            success("Verification email sent successfully");
+        } catch (error: any) {
+            const message =
+                error.response?.data?.error ||
+                "Something went wrong";
+
+            setError(message);
+
+            showError(message);
+            showError("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+
+
+
         setSent(true);
         setCooldown(60);
     };
@@ -31,7 +59,24 @@ const ResendVerification: React.FC = () => {
         if (cooldown > 0) return;
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1000));
-        setLoading(false);
+        try {
+            api.post('auth/resend-verify-email', {
+                'email': email
+            })
+            success("Verification email sent successfully");
+        } catch (error: any) {
+            const message =
+                error.response?.data?.error ||
+                "Something went wrong";
+
+            setError(message);
+
+            showError(message);
+            showError("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+
         setCooldown(60);
     };
 

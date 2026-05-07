@@ -1,0 +1,105 @@
+/* snackbar.css */
+
+.snackbar-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.snackbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 0.5px solid;
+    min-width: 280px;
+    max-width: 440px;
+    pointer-events: all;
+    font-size: 13px;
+    animation: snack-in .22s cubic-bezier(.16, 1, .3, 1);
+}
+
+.snackbar--exit {
+    animation: snack-out .18s cubic-bezier(.4, 0, 1, 1) forwards;
+}
+
+.snackbar.error {
+    background: var(--color-background-danger);
+    border-color: var(--color-border-danger);
+    color: var(--color-text-danger);
+}
+
+.snackbar.success {
+    background: var(--color-background-success);
+    border-color: var(--color-border-success);
+    color: var(--color-text-success);
+}
+
+.snackbar.warning {
+    background: var(--color-background-warning);
+    border-color: var(--color-border-warning);
+    color: var(--color-text-warning);
+}
+
+.snackbar.info {
+    background: var(--color-background-info);
+    border-color: var(--color-border-info);
+    color: var(--color-text-info);
+}
+
+.snackbar__icon {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.snackbar__message {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.snackbar__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    opacity: .55;
+    color: inherit;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.snackbar__close:hover {
+    opacity: 1;
+}
+
+@keyframes snack-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes snack-out {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(6px) scale(.97);
+    }
+}

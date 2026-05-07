@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
+import api from "../../api/axiosInstance";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -8,6 +12,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
     const [loading, setLoading] = useState(false);
+    const { setAccessToken } = useAuth();
 
     const validate = () => {
         const e: typeof errors = {};
@@ -24,8 +29,39 @@ const Login: React.FC = () => {
         if (Object.keys(e).length) { setErrors(e); return; }
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
+        try {
+            const response = await api.post('/auth/signin', {
+                email,
+                password
+            }, {
+                withCredentials: true
+            });
+
+            setAccessToken(response.data.tokens.access);
+
+            navigate("/dashboard", { replace: true });
+
+        } catch (error: any) {
+
+            toast.error(error.response.data.error)
+            if (error.response?.status === 403) {
+                const code = error.response.data.code;
+
+                if (code === "EMAIL_NOT_VERIFIED") {
+                    toast.error(error.response.data.message)
+                    navigate("/resend-verification-email");
+                }
+
+                if (code === "ACCOUNT_DISABLED") {
+                    navigate("/account-disabled");
+                }
+
+            }
+
+            console.error(error);
+        }
         setLoading(false);
-        navigate("/dashboard");
+
     };
 
     return (

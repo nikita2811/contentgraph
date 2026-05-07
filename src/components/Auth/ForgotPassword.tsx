@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
+import api from "../../api/axiosInstance";
 
 const ForgotPassword: React.FC = () => {
     const navigate = useNavigate();
@@ -15,6 +16,15 @@ const ForgotPassword: React.FC = () => {
         if (!/\S+@\S+\.\S+/.test(email)) { setError("Enter a valid email"); return; }
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
+        try {
+            await api.post('/auth/forgot-password', {
+                email,
+
+            });
+
+        } catch (error: any) {
+            console.log(error)
+        }
         setLoading(false);
         setSent(true);
     };
@@ -24,9 +34,9 @@ const ForgotPassword: React.FC = () => {
             <div className="success-icon">📬</div>
             <h2 className="card-title">Reset link sent</h2>
             <p className="card-sub">If <strong>{email}</strong> is registered, you'll receive a reset link shortly.</p>
-            <button className="btn btn--primary btn--full" onClick={() => navigate("/set-new-password")}>
+            {/* <button className="btn btn--primary btn--full" onClick={() => navigate("/set-new-password")}>
                 I have a reset code →
-            </button>
+            </button> */}
             <button className="btn btn--link" onClick={() => navigate("/signin")}>Back to sign in</button>
         </div>
     );
