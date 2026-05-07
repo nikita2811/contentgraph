@@ -62,7 +62,7 @@ const ResendVerification: React.FC = () => {
             api.post('auth/resend-verify-email', {
                 'email': email
             })
-            success("Verification email sent successfully");
+            toast.success("Verification email sent successfully");
         } catch (error: any) {
             const message =
                 error.response?.data?.error ||
@@ -70,8 +70,7 @@ const ResendVerification: React.FC = () => {
 
             setError(message);
 
-            showError(message);
-            showError("Something went wrong");
+
         } finally {
             setLoading(false);
         }
