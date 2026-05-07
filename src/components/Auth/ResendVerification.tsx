@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
 import api from "../../api/axiosInstance";
-import { useSnackbar } from "../snackbar/useSnackbar";
-import { SnackbarContainer } from "../snackbar/Snackbar"
+
+
 
 const ResendVerification: React.FC = () => {
     const navigate = useNavigate();
@@ -12,9 +12,6 @@ const ResendVerification: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [sent, setSent] = useState(false);
     const [cooldown, setCooldown] = useState(0);
-
-
-    const { items, remove, error: showError, success } = useSnackbar();
 
     useEffect(() => {
         if (cooldown <= 0) return;
