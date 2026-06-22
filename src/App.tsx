@@ -57,7 +57,7 @@ const App: React.FC = () => {
         {/* Protected — guests bounce to /signin */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard data={mockDashboardData} />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route
               path="/single-product"
               element={
@@ -77,8 +77,7 @@ const App: React.FC = () => {
           path="/credits"
           element={
             <CreditsPage
-              credits={mockDashboardData.creditsRemaining}
-              creditsTotal={mockDashboardData.creditsTotal}
+
             />
           }
         />

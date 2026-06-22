@@ -1,0 +1,119 @@
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2.0rem;
+    margin-top: 1.5rem;
+}
+
+/* ===== CARD ===== */
+
+.dashboard-stat-card {
+    background: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 20px;
+    padding: 1.5rem;
+
+    box-shadow: var(--shadow-card);
+
+    transition: all .25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: linear-gradient(90deg,
+            var(--color-primary),
+            var(--color-secondary));
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(36, 56, 156, .12);
+}
+
+/* ===== TOP ===== */
+
+.dashboard-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-stat-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--color-primary-fixed);
+    color: var(--color-primary);
+}
+
+.dashboard-stat-icon .material-symbols-outlined {
+    font-size: 22px;
+}
+
+.dashboard-stat-trend {
+    background: #ecfdf5;
+    color: #059669;
+
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+/* ===== VALUE ===== */
+
+.dashboard-stat-value {
+    margin: 1rem 0 .35rem;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+
+    color: var(--color-on-surface);
+}
+
+/* ===== LABEL ===== */
+
+.dashboard-stat-label {
+    margin: 0;
+    font-size: .95rem;
+    font-weight: 700;
+
+    color: var(--color-on-surface);
+}
+
+/* ===== SUBTEXT ===== */
+
+.dashboard-stat-sub {
+    margin-top: .4rem;
+    font-size: .82rem;
+
+    color: var(--color-on-surface-variant);
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-stat-value {
+        font-size: 1.75rem;
+    }
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
-import api from "../../api/axiosInstance";
+import { authApi } from "../../api/axiosInstance";
 import toast from "react-hot-toast";
 
 
@@ -33,7 +33,7 @@ const ResendVerification: React.FC = () => {
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
         try {
-            api.post('auth/resend-verify-email', {
+            authApi.post('auth/resend-verify-email', {
                 'email': email
             })
             toast.success("Verification email sent successfully");

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
-import api from "../../api/axiosInstance";
+import { authApi } from "../../api/axiosInstance";
 
 const ForgotPassword: React.FC = () => {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const ForgotPassword: React.FC = () => {
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
         try {
-            await api.post('/auth/forgot-password', {
+            await authApi.post('/auth/forgot-password', {
                 email,
 
             });
@@ -58,7 +58,7 @@ const ForgotPassword: React.FC = () => {
                 <Input label="Email address" type="email" placeholder="you@example.com" value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(""); }} error={error}
                     icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>} />
-                <button type="submit" className={`btn btn--primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
+                <button type="submit" className={`btn btn-primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
                     {loading ? <span className="spinner" /> : "Send reset link"}
                 </button>
             </form>

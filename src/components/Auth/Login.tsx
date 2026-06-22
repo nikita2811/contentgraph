@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
-import api from "../../api/axiosInstance";
+import { authApi } from "../../api/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
         try {
-            const response = await api.post('/auth/signin', {
+            const response = await authApi.post('/auth/signin', {
                 email,
                 password
             }, {
@@ -39,11 +39,14 @@ const Login: React.FC = () => {
 
             setAccessToken(response.data.tokens.access);
 
+            localStorage.setItem('access_token', response.data.tokens.access);
+            localStorage.setItem('refresh_token', response.data.tokens.refresh);
+
             navigate("/dashboard", { replace: true });
 
         } catch (error: any) {
 
-            toast.error(error.response.data.error)
+            toast.error(error.response.data)
             if (error.response?.status === 403) {
                 const code = error.response.data.code;
 
@@ -100,7 +103,7 @@ const Login: React.FC = () => {
                     </button>
                 </div>
 
-                <button type="submit" className={`btn btn--primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
+                <button type="submit" className={`btn btn-primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
                     {loading ? <span className="spinner" /> : "Sign in"}
                 </button>
             </form>

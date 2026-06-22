@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
-import api from "../../api/axiosInstance";
+import { authApi } from "../../api/axiosInstance";
 import { useSearchParams } from "react-router-dom";
 
 const SetNewPassword: React.FC = () => {
@@ -38,7 +38,7 @@ const SetNewPassword: React.FC = () => {
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1200));
         try {
-            await api.post('/auth/reset-password', {
+            await authApi.post('/auth/reset-password', {
                 ...form,
                 token
             });
@@ -92,7 +92,7 @@ const SetNewPassword: React.FC = () => {
                 <Input label="Confirm password" type="password" placeholder="••••••••" value={form.confirm_password} onChange={set("confirm_password")} error={errors.confirm_password}
                     icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>} />
 
-                <button type="submit" className={`btn btn--primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
+                <button type="submit" className={`btn btn-primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
                     {loading ? <span className="spinner" /> : "Reset password"}
                 </button>
             </form>

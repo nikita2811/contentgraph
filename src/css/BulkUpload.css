@@ -1,0 +1,294 @@
+@import '../css/theme.css';
+
+.bulk-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* HERO */
+
+.bulk-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 32px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(135deg,
+            var(--color-primary-fixed),
+            white);
+
+    border: 1px solid var(--color-border-subtle);
+
+    box-shadow: var(--shadow-card);
+}
+
+.bulk-hero h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.bulk-hero p {
+    margin-top: 8px;
+    color: var(--color-on-surface-variant);
+}
+
+.bulk-credit-pill {
+    padding: 10px 16px;
+
+    border-radius: 999px;
+
+    background: white;
+
+    font-weight: 600;
+
+    border: 1px solid var(--color-border-subtle);
+}
+
+/* TOP GRID */
+
+.bulk-top-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.3fr 0.7fr;
+
+    gap: 24px;
+}
+
+/* UPLOAD CARD */
+
+.bulk-upload-card,
+.bulk-stats-card,
+.bulk-jobs-card,
+.bulk-activity-card,
+.bulk-template-card {
+    background: white;
+
+    border-radius: 20px;
+
+    border: 1px solid var(--color-border-subtle);
+
+    padding: 24px;
+
+    box-shadow: var(--shadow-card);
+}
+
+.bulk-dropzone {
+    border: 2px dashed var(--color-border-subtle);
+
+    border-radius: 18px;
+
+    min-height: 260px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    gap: 12px;
+}
+
+.bulk-upload-icon {
+    font-size: 56px;
+}
+
+.bulk-dropzone button {
+    background: var(--color-primary);
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+}
+
+.bulk-file-info {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* STATS */
+
+.bulk-stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 16px;
+}
+
+.bulk-stat {
+    background:
+        var(--color-surface-container-low);
+
+    padding: 18px;
+
+    border-radius: 14px;
+}
+
+.bulk-stat span {
+    display: block;
+
+    font-size: 13px;
+
+    color: var(--color-on-surface-variant);
+}
+
+.bulk-stat strong {
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 1.5rem;
+}
+
+/* TABLE */
+
+.bulk-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bulk-table th,
+.bulk-table td {
+    padding: 14px;
+    text-align: left;
+}
+
+.bulk-table thead {
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.bulk-table tbody tr:hover {
+    background:
+        var(--color-surface-container-low);
+}
+
+/* STATUS */
+
+.status {
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.status.done {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.status.processing {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* PROGRESS */
+
+.progress-bar {
+    width: 160px;
+
+    height: 10px;
+
+    border-radius: 999px;
+
+    background: #eef2ff;
+
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+
+    background:
+        linear-gradient(90deg,
+            var(--color-primary),
+            #5c7cff);
+
+    border-radius: inherit;
+}
+
+/* BUTTONS */
+
+.action-btn {
+    border: none;
+
+    background: var(--color-primary);
+
+    color: white;
+
+    padding: 8px 14px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.action-btn.disabled {
+    background: #cbd5e1;
+}
+
+/* ACTIVITY */
+
+.bulk-activity-card ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.bulk-activity-card li {
+    margin-bottom: 12px;
+}
+
+/* TEMPLATE */
+
+.bulk-template-card button {
+    margin-top: 12px;
+
+    background: var(--color-primary);
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1024px) {
+    .bulk-top-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .bulk-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .bulk-table {
+        display: block;
+        overflow-x: auto;
+    }
+}

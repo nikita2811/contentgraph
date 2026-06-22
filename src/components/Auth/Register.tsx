@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Input";
-import api from "../../api/axiosInstance";
+import { authApi } from "../../api/axiosInstance";
 import toast from "react-hot-toast";
 
 const Register: React.FC = () => {
@@ -59,7 +59,7 @@ const Register: React.FC = () => {
         await new Promise((r) => setTimeout(r, 1400));
 
         try {
-            await api.post('/auth/signup', form)
+            await authApi.post('/auth/signup', form)
             setDone(true);
         } catch (error: any) {
             if (error.response?.data?.message) {
@@ -122,7 +122,7 @@ const Register: React.FC = () => {
                     <button type="button" className="link">Privacy Policy</button>
                 </label>
 
-                <button type="submit" className={`btn btn--primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
+                <button type="submit" className={`btn btn-primary btn--full${loading ? " btn--loading" : ""}`} disabled={loading}>
                     {loading ? <span className="spinner" /> : "Create account"}
                 </button>
             </form>

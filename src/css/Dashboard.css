@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+@import '../css/theme.css';
 
 *,
 *::before,
@@ -470,7 +470,7 @@ body,
     }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
 
 *,
 *::before,
@@ -1360,7 +1360,7 @@ body,
     opacity: 0.4;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
 
 *,
 *::before,
@@ -2667,7 +2667,7 @@ body,
     text-align: right;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
 
 *,
 *::before,
@@ -4434,7 +4434,7 @@ body,
     margin: 0;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
 
 *,
 *::before,
@@ -7347,3 +7347,5 @@ body,
     flex-direction: column;
     height: 100vh;
 }
+
+/* ===== STATS GRID ===== */

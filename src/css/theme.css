@@ -1,0 +1,524 @@
+/**
+ * Indigo Logic — Design System Theme
+ * Generated from DESIGN.md
+ *
+ * Usage: Import once at the top of your entry file (e.g. main.tsx):
+ *   import './theme.css';
+ *
+ * All tokens are then available as CSS custom properties anywhere in your app.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+/* ─────────────────────────────────────────────
+   ROOT: All design tokens as CSS custom properties
+   ───────────────────────────────────────────── */
+:root {
+
+    /* ── Surface Colors ─────────────────────────── */
+    --color-surface: #faf8ff;
+    --color-surface-dim: #d2d9f4;
+    --color-surface-bright: #faf8ff;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f2f3ff;
+    --color-surface-container: #eaedff;
+    --color-surface-container-high: #e2e7ff;
+    --color-surface-container-highest: #dae2fd;
+
+    /* ── On-Surface (Text on Surfaces) ─────────── */
+    --color-on-surface: #131b2e;
+    --color-on-surface-variant: #454652;
+
+    /* ── Inverse ────────────────────────────────── */
+    --color-inverse-surface: #283044;
+    --color-inverse-on-surface: #eef0ff;
+
+    /* ── Outline ────────────────────────────────── */
+    --color-outline: #757684;
+    --color-outline-variant: #c5c5d4;
+
+    /* ── Primary ────────────────────────────────── */
+    --color-surface-tint: #4355b9;
+    --color-primary: #24389c;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #3f51b5;
+    --color-on-primary-container: #cacfff;
+    --color-inverse-primary: #bac3ff;
+
+    /* ── Primary Fixed ──────────────────────────── */
+    --color-primary-fixed: #dee0ff;
+    --color-primary-fixed-dim: #bac3ff;
+    --color-on-primary-fixed: #00105c;
+    --color-on-primary-fixed-variant: #293ca0;
+
+    /* ── Secondary ──────────────────────────────── */
+    --color-secondary: #4858ab;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #96a5ff;
+    --color-on-secondary-container: #27378a;
+
+    /* ── Secondary Fixed ────────────────────────── */
+    --color-secondary-fixed: #dee0ff;
+    --color-secondary-fixed-dim: #bac3ff;
+    --color-on-secondary-fixed: #00105b;
+    --color-on-secondary-fixed-variant: #2f3f92;
+
+    /* ── Tertiary ───────────────────────────────── */
+    --color-tertiary: #2f3891;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #4851aa;
+    --color-on-tertiary-container: #cbceff;
+
+    /* ── Tertiary Fixed ─────────────────────────── */
+    --color-tertiary-fixed: #e0e0ff;
+    --color-tertiary-fixed-dim: #bdc2ff;
+    --color-on-tertiary-fixed: #000767;
+    --color-on-tertiary-fixed-variant: #343d96;
+
+    /* ── Error ──────────────────────────────────── */
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+
+    /* ── Background ─────────────────────────────── */
+    --color-background: #faf8ff;
+    --color-on-background: #131b2e;
+
+    /* ── Surface Variant ────────────────────────── */
+    --color-surface-variant: #dae2fd;
+
+    /* ── Extended Semantic Surfaces ─────────────── */
+    --color-surface-indigo: #F8FAFF;
+    --color-surface-slate: #F1F5F9;
+
+    /* ── Accent & Semantic ──────────────────────── */
+    --color-success-mint: #ECFDF5;
+    --color-accent-teal: #0D9488;
+    --color-border-subtle: #E2E8F0;
+
+    /* ─────────────────────────────────────────────
+     Typography Tokens
+     ───────────────────────────────────────────── */
+    /* ── Typography ───────────────────────────────────────────── */
+    --font-family: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    /* Font Families */
+
+
+    /* Display LG */
+    --text-display-lg-size: 56px;
+    --text-display-lg-weight: 700;
+    --text-display-lg-lh: 64px;
+    --text-display-lg-ls: -0.02em;
+
+    /* Headline LG */
+    --text-headline-lg-size: 32px;
+    --text-headline-lg-weight: 700;
+    --text-headline-lg-lh: 40px;
+    --text-headline-lg-ls: -0.01em;
+
+    /* Headline LG Mobile */
+    --text-headline-lg-mobile-size: 28px;
+    --text-headline-lg-mobile-weight: 700;
+    --text-headline-lg-mobile-lh: 36px;
+
+    /* Headline MD */
+    --text-headline-md-size: 24px;
+    --text-headline-md-weight: 600;
+    --text-headline-md-lh: 32px;
+
+    /* Body LG */
+    --text-body-lg-size: 18px;
+    --text-body-lg-weight: 400;
+    --text-body-lg-lh: 28px;
+
+    /* Body MD */
+    --text-body-md-size: 16px;
+    --text-body-md-weight: 400;
+    --text-body-md-lh: 24px;
+
+    /* Label LG */
+    --text-label-lg-size: 14px;
+    --text-label-lg-weight: 600;
+    --text-label-lg-lh: 20px;
+    --text-label-lg-ls: 0.02em;
+
+    /* Label SM */
+    --text-label-sm-size: 12px;
+    --text-label-sm-weight: 500;
+    --text-label-sm-lh: 16px;
+    --text-label-sm-ls: 0.04em;
+
+    /* Code MD */
+    --text-code-md-size: 14px;
+    --text-code-md-weight: 400;
+    --text-code-md-lh: 20px;
+
+    /* ─────────────────────────────────────────────
+     Border Radius
+     ───────────────────────────────────────────── */
+    --rounded-sm: 0.25rem;
+    /* 4px  */
+    --rounded: 0.5rem;
+    /* 8px  */
+    --rounded-md: 0.75rem;
+    /* 12px */
+    --rounded-lg: 1rem;
+    /* 16px */
+    --rounded-xl: 1.5rem;
+    /* 24px */
+    --rounded-full: 9999px;
+
+    /* ─────────────────────────────────────────────
+     Spacing
+     ───────────────────────────────────────────── */
+    --spacing-base: 8px;
+    --spacing-container-max: 1280px;
+    --spacing-gutter-desktop: 24px;
+    --spacing-margin-desktop: 48px;
+    --spacing-margin-mobile: 16px;
+    --spacing-stack-sm: 12px;
+    --spacing-stack-md: 24px;
+    --spacing-stack-lg: 48px;
+
+    /* ─────────────────────────────────────────────
+     Elevation / Shadow
+     ───────────────────────────────────────────── */
+    --shadow-level-0: none;
+    --shadow-level-1: 0 1px 3px rgba(67, 85, 185, 0.04);
+    --shadow-level-2: 0 4px 20px rgba(63, 81, 181, 0.08);
+    --shadow-level-3: 0 8px 32px rgba(63, 81, 181, 0.14);
+
+    --sidebar-width: 256px;
+    --sidebar-collapsed-width: 72px;
+}
+
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY UTILITY CLASSES
+   ───────────────────────────────────────────── */
+
+.text-display-lg {
+    font-family: var(--font-sans);
+    font-size: var(--text-display-lg-size);
+    font-weight: var(--text-display-lg-weight);
+    line-height: var(--text-display-lg-lh);
+    letter-spacing: var(--text-display-lg-ls);
+}
+
+.text-headline-lg {
+    font-family: var(--font-sans);
+    font-size: var(--text-headline-lg-size);
+    font-weight: var(--text-headline-lg-weight);
+    line-height: var(--text-headline-lg-lh);
+    letter-spacing: var(--text-headline-lg-ls);
+}
+
+.text-headline-md {
+    font-family: var(--font-sans);
+    font-size: var(--text-headline-md-size);
+    font-weight: var(--text-headline-md-weight);
+    line-height: var(--text-headline-md-lh);
+}
+
+.text-body-lg {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-lg-size);
+    font-weight: var(--text-body-lg-weight);
+    line-height: var(--text-body-lg-lh);
+}
+
+.text-body-md {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md-size);
+    font-weight: var(--text-body-md-weight);
+    line-height: var(--text-body-md-lh);
+}
+
+.text-label-lg {
+    font-family: var(--font-sans);
+    font-size: var(--text-label-lg-size);
+    font-weight: var(--text-label-lg-weight);
+    line-height: var(--text-label-lg-lh);
+    letter-spacing: var(--text-label-lg-ls);
+}
+
+.text-label-sm {
+    font-family: var(--font-sans);
+    font-size: var(--text-label-sm-size);
+    font-weight: var(--text-label-sm-weight);
+    line-height: var(--text-label-sm-lh);
+    letter-spacing: var(--text-label-sm-ls);
+}
+
+.text-code-md {
+    font-family: var(--font-mono);
+    font-size: var(--text-code-md-size);
+    font-weight: var(--text-code-md-weight);
+    line-height: var(--text-code-md-lh);
+}
+
+/* ─────────────────────────────────────────────
+   MOBILE TYPOGRAPHY OVERRIDES
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .text-headline-lg {
+        font-size: var(--text-headline-lg-mobile-size);
+        font-weight: var(--text-headline-lg-mobile-weight);
+        line-height: var(--text-headline-lg-mobile-lh);
+        letter-spacing: 0;
+    }
+}
+
+/* ─────────────────────────────────────────────
+   COMPONENT UTILITY CLASSES
+   ───────────────────────────────────────────── */
+
+/* Buttons ──────────────────────────────────── */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-label-lg-size);
+    font-weight: var(--text-label-lg-weight);
+    letter-spacing: var(--text-label-lg-ls);
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+    box-shadow: var(--shadow-level-2);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 24px;
+    border-radius: var(--rounded-full);
+    background-color: transparent;
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    font-size: var(--text-label-lg-size);
+    font-weight: var(--text-label-lg-weight);
+    letter-spacing: var(--text-label-lg-ls);
+    border: 1px solid var(--color-border-subtle);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-surface-container-low);
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    border-radius: var(--rounded);
+    background-color: transparent;
+    color: var(--color-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-label-lg-size);
+    font-weight: var(--text-label-lg-weight);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-ghost:hover {
+    opacity: 0.75;
+}
+
+/* Cards ─────────────────────────────────────── */
+.card {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--rounded);
+    box-shadow: var(--shadow-level-1);
+    padding: var(--spacing-stack-md);
+    transition: box-shadow 0.2s ease;
+}
+
+.card-elevated {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--rounded-xl);
+    box-shadow: var(--shadow-level-2);
+    padding: var(--spacing-stack-md);
+}
+
+.card-feature:hover {
+    background-color: var(--color-surface-container-low);
+}
+
+/* Inputs ────────────────────────────────────── */
+.input-field {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--rounded);
+    background-color: var(--color-surface-container-lowest);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md-size);
+    line-height: var(--text-body-md-lh);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+    color: var(--color-outline);
+}
+
+.input-field:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(36, 56, 156, 0.12);
+}
+
+.textarea-field {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Generating State ──────────────────────────── */
+.input-generating {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+@keyframes result-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.result-generating {
+    animation: result-pulse 1.5s ease-in-out infinite;
+}
+
+/* Chips & Status Tags ───────────────────────── */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--rounded-full);
+    font-family: var(--font-sans);
+    font-size: var(--text-label-sm-size);
+    font-weight: var(--text-label-sm-weight);
+    letter-spacing: var(--text-label-sm-ls);
+    white-space: nowrap;
+}
+
+.chip-seo {
+    background-color: rgba(13, 148, 136, 0.1);
+    color: var(--color-accent-teal);
+}
+
+.chip-success {
+    background-color: var(--color-success-mint);
+    color: var(--color-accent-teal);
+}
+
+.chip-credit {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    font-weight: 700;
+}
+
+/* Step Indicators ───────────────────────────── */
+.step-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--rounded-full);
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-label-lg-size);
+    font-weight: var(--text-label-lg-weight);
+    flex-shrink: 0;
+}
+
+.step-connector {
+    width: 2px;
+    background-color: var(--color-border-subtle);
+    flex-grow: 1;
+    min-height: 24px;
+}
+
+/* Code / Monospace blocks ───────────────────── */
+.code-block {
+    font-family: var(--font-mono);
+    font-size: var(--text-code-md-size);
+    line-height: var(--text-code-md-lh);
+    background-color: var(--color-surface-container-high);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--rounded);
+    padding: 12px 16px;
+    overflow-x: auto;
+    color: var(--color-on-surface);
+}
+
+/* ─────────────────────────────────────────────
+   LAYOUT UTILITIES
+   ───────────────────────────────────────────── */
+
+.container {
+    width: 100%;
+    max-width: var(--spacing-container-max);
+    margin: 0 auto;
+    padding: 0 var(--spacing-gutter-desktop);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-margin-mobile);
+    }
+}
+
+/* ─────────────────────────────────────────────
+   GLOBAL BASE STYLES
+   ───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md-size);
+    line-height: var(--text-body-md-lh);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

@@ -1,290 +1,445 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { api } from "../api/axiosInstance";
+import { usePolling } from "../hooks/usePolling";
+import '../css/SinglePage.css';
 
-// ─── Types ────────────────────────────────────────────────────────
 
-type Tone = "Professional" | "Friendly" | "Luxury" | "Casual" | "Bold";
 
-interface GeneratedOutput {
-    description: string;
-    wordCount: number;
-    metaTitle: string;
-    metaDescription: string;
+export interface GeneratedOutput {
+    status: "done" | "processing" | "failed";
+
+    seo_title: string;
+    meta_title: string;
+    meta_description: string;
+
     tags: string[];
+
+    primary_keyword: string;
+    secondary_keyword: string;
+
+    h1?: string;
+    long_description?: string;
+    generation_time_ms?: number;
 }
+interface BalanceCheckResponse {
+    can_afford: boolean;
+    balance: string;
+    cost: string;
+    shortfall: string;
+    unit_price: string;
+    tier: string;
+    units: number;
+}
+type ToastType = "success" | "error" | "info";
 
-// ─── Sub-components ───────────────────────────────────────────────
+function Toast({
+    message,
+    type,
+    onClose,
+}: {
+    message: string;
+    type: ToastType;
+    onClose: () => void;
+}) {
+    useEffect(() => {
+        const t = setTimeout(onClose, 4000);
+        return () => clearTimeout(t);
+    }, [onClose]);
 
-const CopyButton: React.FC<{ text: string }> = ({ text }) => {
-    const [copied, setCopied] = useState(false);
-    const handle = () => {
-        navigator.clipboard.writeText(text).catch(() => { });
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
     return (
-        <button className="sp-copy-btn" onClick={handle}>
-            {copied ? (
-                <>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    Copied
-                </>
-            ) : "Copy"}
-        </button>
-    );
-};
-
-const OutputCard: React.FC<{
-    label: string;
-    children: React.ReactNode;
-    footer?: React.ReactNode;
-    copyText: string;
-}> = ({ label, children, footer, copyText }) => (
-    <div className="sp-output-card">
-        <div className="sp-output-card-header">
-            <span className="sp-output-label">{label}</span>
-            <CopyButton text={copyText} />
+        <div className={`cb-toast cb-toast--${type}`}>
+            {message}
+            <button onClick={onClose} className="cb-toast-close">×</button>
         </div>
-        <div className="sp-output-body">{children}</div>
-        {footer && <div className="sp-output-footer">{footer}</div>}
-    </div>
-);
-
-const Spinner: React.FC = () => (
-    <div className="sp-spinner-wrap">
-        <div className="sp-spinner" />
-        <p className="sp-spinner-text">Generating your copy…</p>
-    </div>
-);
-
-// ─── Main Component ───────────────────────────────────────────────
-
-const TONES: Tone[] = ["Professional", "Friendly", "Luxury", "Casual", "Bold"];
-const CATEGORIES = ["Accessories", "Clothing", "Electronics", "Beauty", "Home & Garden", "Sports", "Food & Beverage", "Other"];
+    );
+}
 
 interface Props {
     credits: number;
     onCreditUsed?: () => void;
 }
 
-const SingleProductPage: React.FC<Props> = ({ credits, onCreditUsed }) => {
-    const [productName, setProductName] = useState("Leather Minimalist Wallet");
-    const [category, setCategory] = useState("Accessories");
-    const [features, setFeatures] = useState("Slim design, RFID-blocking, 6 card slots, full-grain brown leather");
+
+const SingleProductPage: React.FC<Props> = ({
+    credits,
+    onCreditUsed,
+}) => {
+    const [productName, setProductName] = useState("");
+    const [category, setCategory] = useState("");
+    const [features, setFeatures] = useState("");
     const [audience, setAudience] = useState("");
-    const [tone, setTone] = useState<Tone>("Professional");
+    const [tone, setTone] = useState("");
+    const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+    const showToast = useCallback((message: string, type: ToastType) => {
+        setToast({ message, type });
+    }, []);
+
+    const [taskId, setTaskId] = useState<string | null>(
+        null
+    );
+    const [units, setUnits] = useState<number>(1);
     const [loading, setLoading] = useState(false);
-    const [output, setOutput] = useState<GeneratedOutput | null>({
-        description:
-            "Carry less, own more. This slim leather wallet fits 6 cards and your everyday essentials without the bulk — RFID-blocking technology keeps your cards safe from digital theft while the full-grain brown leather develops a rich patina with use. The perfect everyday carry for the modern minimalist.",
-        wordCount: 176,
-        metaTitle: "Leather Minimalist Wallet — Slim RFID-Blocking Card Holder",
-        metaDescription:
-            "Shop our slim RFID-blocking leather wallet. Holds 6 cards, built to last, and looks better with age. Free shipping on orders over $50.",
-        tags: ["minimalist wallet", "leather wallet", "RFID wallet", "slim wallet", "card holder"],
-    });
+    const [output, setOutput] =
+        useState<GeneratedOutput | null>(null);
 
-    const handleGenerate = async () => {
-        if (!productName.trim() || !features.trim() || loading) return;
-        setLoading(true);
-        setOutput(null);
+    const {
+        status,
+        isDone,
+        result,
+        error,
+    } = usePolling<GeneratedOutput>(taskId);
 
-        // Simulate API call
-        await new Promise((r) => setTimeout(r, 1800));
+    useEffect(() => {
+        if (isDone && result) {
+            setOutput(result);
+            setLoading(false);
+            onCreditUsed?.();
+        }
+    }, [isDone, result, onCreditUsed]);
 
-        setOutput({
-            description: `${productName} — designed for those who value quality over quantity. ${features.split(",")[0]?.trim()} ensures ${audience ? `${audience} get` : "you get"} exactly what you need, nothing more. Built with premium materials, this product embodies the ${tone.toLowerCase()} approach to everyday essentials.`,
-            wordCount: 48,
-            metaTitle: `${productName} — ${features.split(",")[0]?.trim()} | ${category}`,
-            metaDescription: `Discover the ${productName.toLowerCase()}. ${features.split(",").slice(0, 2).join(", ")}. Free shipping on orders over $50.`,
-            tags: [
-                productName.toLowerCase(),
-                category.toLowerCase(),
-                ...features.split(",").slice(0, 3).map((f) => f.trim().toLowerCase()),
-            ],
-        });
+    async function checkBalance(units: number): Promise<BalanceCheckResponse> {
+        const { data } = await api.post<BalanceCheckResponse>(
+            "payment/balance-check",
+            { units },
 
-        setLoading(false);
-        onCreditUsed?.();
+        );
+        return data;
+    }
+    useEffect(() => {
+        if (error) {
+            setLoading(false);
+            showToast(error, "error");
+        }
+    }, [error]);
+    const copyToClipboard = async (text: string, label: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast(`${label} copied!`, "success");
+        } catch {
+            showToast("Failed to copy to clipboard.", "error");
+        }
     };
 
-    const metaTitleLen = output?.metaTitle.length ?? 0;
-    const metaDescLen = output?.metaDescription.length ?? 0;
+    const handleGenerate = async (isRegenerate) => {
+        const check = await checkBalance(units);
+        if (!check.can_afford) {
+            showToast(
+                `Insufficient balance. You need ₹${check.shortfall} more. Top up your wallet.`, "error"
+            );
+            return;
+        }
+        if (!productName.trim()) {
+            showToast("Product name is required.", "error");
+            return;
+        }
+
+        setTaskId(null);   // ← stops any in-flight poll immediately
+        setOutput(null);
+        setLoading(true);
+
+
+        try {
+            const key_features = features
+                .split(",")
+                .map((f) => f.trim())
+                .filter(Boolean);
+
+            const response = await api.post(
+                "content/generate-content",
+                {
+                    product_name: productName,
+                    category,
+                    key_features,
+                    target_audience: audience,
+                    tone,
+                    is_regenerate: isRegenerate,
+                }
+            );
+
+            setTaskId(response.data.task_id);
+        } catch {
+            setLoading(false);
+            showToast("Failed to start generation. Please try again.", "error");
+        }
+    };
 
     return (
-        <div className="sp-root">
-            {/* Left panel — form */}
-            <div className="sp-form-panel">
-                <div className="sp-panel-header">
-                    <h1 className="sp-panel-title">Single product</h1>
-                    <p className="sp-panel-sub">Fill in your product details and generate copy instantly.</p>
+        <div className="sp-page">
+            {/* Hero */}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
+            <section className="sp-hero">
+                <div>
+                    <h1>Single Product Generator</h1>
+
+                    <p>
+                        Generate product descriptions,
+                        metadata and SEO tags using AI.
+                    </p>
                 </div>
 
-                <div className="sp-form">
-                    {/* Product name */}
+                <div className="sp-credit-pill">
+                    ⚡ {credits} Credits
+                </div>
+            </section>
+
+            {/* Main Layout */}
+            <div className="sp-layout">
+                {/* Left */}
+                <aside className="sp-form-panel">
+                    <h2>Product Details</h2>
+
                     <div className="sp-field">
-                        <label className="sp-label">Product name</label>
+                        <label>Product Name</label>
+
                         <input
-                            className="sp-input"
                             type="text"
-                            placeholder="e.g. Leather Minimalist Wallet"
                             value={productName}
-                            onChange={(e) => setProductName(e.target.value)}
+                            placeholder="Leather Minimalist Wallet"
+                            onChange={(e) =>
+                                setProductName(
+                                    e.target.value
+                                )
+                            }
                         />
                     </div>
 
-                    {/* Category */}
                     <div className="sp-field">
-                        <label className="sp-label">Category</label>
-                        <div className="sp-select-wrap">
-                            <select
-                                className="sp-select"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                            >
-                                {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-                            </select>
-                            <svg className="sp-select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {/* Key features */}
-                    <div className="sp-field">
-                        <label className="sp-label">Key features <span className="sp-label-hint">(comma separated)</span></label>
-                        <textarea
-                            className="sp-textarea"
-                            placeholder="Slim design, RFID-blocking, 6 card slots…"
-                            value={features}
-                            onChange={(e) => setFeatures(e.target.value)}
-                            rows={4}
-                        />
-                    </div>
-
-                    {/* Audience */}
-                    <div className="sp-field">
-                        <label className="sp-label">Target audience <span className="sp-label-hint">(optional)</span></label>
+                        <label>Category</label>
                         <input
-                            className="sp-input"
-                            type="text"
-                            placeholder="e.g. men aged 25–40"
-                            value={audience}
-                            onChange={(e) => setAudience(e.target.value)}
+                            value={category}
+                            placeholder="Lifestyle"
+                            onChange={(e) =>
+                                setCategory(
+                                    e.target.value
+                                )
+                            }
                         />
                     </div>
 
-                    {/* Tone */}
                     <div className="sp-field">
-                        <label className="sp-label">Tone</label>
-                        <div className="sp-tone-grid">
-                            {TONES.map((t) => (
-                                <button
-                                    key={t}
-                                    className={`sp-tone-btn ${tone === t ? "sp-tone-btn--active" : ""}`}
-                                    onClick={() => setTone(t)}
-                                >
-                                    {t}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                        <label>Key Features</label>
 
-                    {/* Generate button */}
-                    <div className="sp-generate-wrap">
-                        <button
-                            className={`sp-generate-btn ${loading ? "sp-generate-btn--loading" : ""} ${credits < 1 ? "sp-generate-btn--disabled" : ""}`}
-                            onClick={handleGenerate}
-                            disabled={loading || credits < 1}
-                        >
-                            {loading ? <span className="sp-btn-spinner" /> : null}
-                            Generate description — 1 credit
-                        </button>
-                        <p className="sp-credits-note">You have {credits} credits remaining</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right panel — output */}
-            <div className="sp-output-panel">
-                <h2 className="sp-output-heading">Generated output</h2>
-
-                {loading && <Spinner />}
-
-                {!loading && !output && (
-                    <div className="sp-empty-state">
-                        <div className="sp-empty-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                                <polyline points="10 9 9 9 8 9" />
-                            </svg>
-                        </div>
-                        <p className="sp-empty-title">No output yet</p>
-                        <p className="sp-empty-sub">Fill in the form and click Generate to create your product copy.</p>
-                    </div>
-                )}
-
-                {!loading && output && (
-                    <div className="sp-output-list">
-                        {/* Description */}
-                        <OutputCard
-                            label="DESCRIPTION"
-                            copyText={output.description}
-                            footer={<span className="sp-word-count">{output.wordCount} words</span>}
-                        >
-                            <p className="sp-output-text">{output.description}</p>
-                        </OutputCard>
-
-                        {/* Meta title */}
-                        <OutputCard
-                            label="META TITLE"
-                            copyText={output.metaTitle}
-                            footer={
-                                <span className={`sp-char-count ${metaTitleLen > 60 ? "sp-char-count--over" : ""}`}>
-                                    {metaTitleLen} / 60 chars
-                                </span>
+                        <textarea
+                            rows={4}
+                            value={features}
+                            placeholder="RFID Protection, Slim Design, Premium Leather"
+                            onChange={(e) =>
+                                setFeatures(
+                                    e.target.value
+                                )
                             }
-                        >
-                            <p className="sp-output-text sp-output-text--meta">{output.metaTitle}</p>
-                        </OutputCard>
+                        />
+                    </div>
 
-                        {/* Meta description */}
-                        <OutputCard
-                            label="META DESCRIPTION"
-                            copyText={output.metaDescription}
-                            footer={
-                                <span className={`sp-char-count ${metaDescLen > 155 ? "sp-char-count--over" : ""}`}>
-                                    {metaDescLen} / 155 chars
-                                </span>
+                    <div className="sp-field">
+                        <label>
+                            Target Audience
+                        </label>
+
+                        <input
+                            value={audience}
+                            placeholder="Men aged 25-40"
+                            onChange={(e) =>
+                                setAudience(
+                                    e.target.value
+                                )
                             }
-                        >
-                            <p className="sp-output-text">{output.metaDescription}</p>
-                        </OutputCard>
+                        />
+                    </div>
 
-                        {/* Tags */}
-                        <div className="sp-output-card">
-                            <div className="sp-output-card-header">
-                                <span className="sp-output-label">TAGS</span>
+                    <div className="sp-field">
+                        <label>Tone</label>
+
+                        <input
+                            value={tone}
+                            placeholder="Professional"
+                            onChange={(e) =>
+                                setTone(
+                                    e.target.value
+                                )
+                            }
+                        />
+                    </div>
+
+                    <button
+                        className="sp-generate-btn"
+                        onClick={() => handleGenerate(false)}
+                        disabled={loading}
+                    >
+                        {loading
+                            ? "⚡ Generating..."
+                            : "Generate Content"}
+                    </button>
+
+
+
+                    <p className="sp-credit-note">
+                        Remaining Credits:{" "}
+                        {credits}
+                    </p>
+                </aside>
+
+                {/* Right */}
+                <section className="sp-output-panel">
+                    <div className="sp-output-header">
+                        <h2>
+                            Generated Content
+                        </h2>
+                    </div>
+
+                    {!loading && !output && (
+                        <div className="sp-empty-state">
+                            <div className="sp-empty-icon">
+                                ✨
                             </div>
-                            <div className="sp-output-body">
-                                <div className="sp-tags">
+
+                            <h3>
+                                Ready to Generate
+                            </h3>
+
+                            <p>
+                                Enter your product
+                                details and generate
+                                AI-powered content.
+                            </p>
+                        </div>
+                    )}
+
+                    {loading && (
+                        <div className="sp-loading">
+                            <div className="sp-spinner" />
+
+                            <p>
+                                Generating AI
+                                Content...
+                            </p>
+                        </div>
+                    )}
+
+                    {status === "failed" && (
+                        <div className="sp-error">
+                            {error}
+                        </div>
+                    )}
+
+                    {output && (
+                        <div className="seo-output">
+
+                            <div className="seo-status">
+                                <span className="material-symbols-outlined">
+                                    check_circle
+                                </span>
+                                Generated successfully
+                            </div>
+
+                            <div className="seo-card">
+                                <div className="seo-card-header">
+                                    <h3>SEO Title</h3>
+                                    <button onClick={() => copyToClipboard(output.seo_title, "SEO Title")}>Copy</button>
+                                </div>
+                                <p>{output.seo_title}</p>
+                            </div>
+
+                            <div className="seo-card">
+                                <div className="seo-card-header">
+                                    <h3>Meta Title</h3>
+                                    <button onClick={() => copyToClipboard(output.seo_title, "Meta Title")}>Copy</button>
+                                </div>
+                                <p>{output.meta_title}</p>
+                            </div>
+
+                            <div className="seo-card">
+                                <div className="seo-card-header">
+                                    <h3>Meta Description</h3>
+                                    <button onClick={() => copyToClipboard(output.seo_title, "Meta Description")}>Copy</button>
+                                </div>
+                                <p>{output.meta_description}</p>
+                            </div>
+
+                            <div className="seo-keywords-grid">
+                                <div className="seo-keyword-card">
+                                    <span className="seo-label">
+                                        Primary Keyword
+                                    </span>
+
+                                    <span className="seo-pill seo-pill--primary">
+                                        {output.primary_keyword}
+                                    </span>
+                                </div>
+
+                                <div className="seo-keyword-card">
+                                    <span className="seo-label">
+                                        Secondary Keywords
+                                    </span>
+
+                                    <div className="seo-pills">
+                                        {output.secondary_keyword
+                                            .split(",")
+                                            .map((keyword) => (
+                                                <span
+                                                    key={keyword}
+                                                    className="seo-pill"
+                                                >
+                                                    {keyword.trim()}
+                                                </span>
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="seo-card">
+                                <h3>Tags</h3>
+
+                                <div className="seo-pills">
                                     {output.tags.map((tag) => (
-                                        <span key={tag} className="sp-tag">{tag}</span>
+                                        <span
+                                            key={tag}
+                                            className="seo-tag"
+                                        >
+                                            #{tag}
+                                        </span>
                                     ))}
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Regenerate */}
-                        <button className="sp-regen-btn" onClick={handleGenerate} disabled={loading || credits < 1}>
-                            Regenerate — 1 credit
-                        </button>
-                    </div>
-                )}
+                            <div className="seo-actions">
+                                <button className="seo-btn-primary" onClick={() => handleGenerate(true)}   // ← was onClick={handleGenerate}
+                                    disabled={loading}>
+
+                                    {loading
+                                        ? "⚡ Generating..."
+                                        : "Regenerate Content for 1 Credit"}
+                                </button>
+
+
+                                <button className="seo-btn-secondary" onClick={() => copyToClipboard(
+                                    [
+                                        `SEO Title: ${output.seo_title}`,
+                                        `Meta Title: ${output.meta_title}`,
+                                        `Meta Description: ${output.meta_description}`,
+                                        `Primary Keyword: ${output.primary_keyword}`,
+                                        `Secondary Keywords: ${output.secondary_keyword}`,
+                                        `Tags: ${output.tags.join(", ")}`,
+                                    ].join("\n"),
+                                    "All content"
+                                )}>
+                                    Copy All
+                                </button>
+
+                                {/*  <button className="seo-btn-secondary">
+                                    Export JSON
+                                </button> */}
+                            </div>
+
+                        </div>
+                    )}
+                </section>
             </div>
         </div>
     );
