@@ -59,7 +59,7 @@ const ResendVerification: React.FC = () => {
         setLoading(true);
         await new Promise((r) => setTimeout(r, 1000));
         try {
-            api.post('auth/resend-verify-email', {
+            authApi.post('auth/resend-verify-email', {
                 'email': email
             })
             toast.success("Verification email sent successfully");
