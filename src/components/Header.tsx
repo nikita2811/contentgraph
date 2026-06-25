@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   user = DEFAULT_USER,
 }) => {
-  const [searchValue, setSearchValue] = useState('');
+  // const [searchValue, setSearchValue] = useState('');
   const [hasNotification] = useState(true);
 
 

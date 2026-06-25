@@ -24,7 +24,6 @@ interface JobsResponse {
 const JobHistoryPage = () => {
     const [search, setSearch] = useState("");
     const [jobs, setJobs] = useState<Job[]>([]);
-    const [jobsCount, setJobsCount] = useState<number>(0);
     const [jobsPage, setJobsPage] = useState<number>(1);
     const [jobsNext, setJobsNext] = useState<string | null>(null);
     const [jobsLoading, setJobsLoading] = useState(true);
@@ -37,7 +36,7 @@ const JobHistoryPage = () => {
         );
     }, [search, jobs]);
 
-    const totalCredits = jobs.reduce((s, j) => s + j.creditsUsed, 0);
+    const totalCredits = 10;
 
     const fetchJobs = useCallback(
         async (page: number = 1, append: boolean = false) => {
@@ -53,7 +52,6 @@ const JobHistoryPage = () => {
                 const { results, count, next } = response.data;
 
                 setJobs(prev => append ? [...prev, ...results] : results);
-                setJobsCount(count);
                 setJobsNext(next);
                 setJobsPage(page);
                 console.log(response)
@@ -117,6 +115,7 @@ const JobHistoryPage = () => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </section>
+            {jobsError && <p className="text-red-500">{jobsError}</p>}
 
             {/* TIMELINE */}
             <section className="jh-timeline">

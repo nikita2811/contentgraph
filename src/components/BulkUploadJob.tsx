@@ -65,11 +65,11 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
     const [rowCount, setRowCount] = useState<number | null>(null);
     const [balanceOk, setBalanceOk] = useState<boolean | null>(null);
     const [jobs, setJobs] = useState<Job[]>([]);
-    // const [jobsCount, setJobsCount] = useState<number>(0);
+    const [jobsCount, setJobsCount] = useState<number>(0);
     const [jobsPage, setJobsPage] = useState<number>(1);
     const [jobsNext, setJobsNext] = useState<string | null>(null);
     const [jobsLoading, setJobsLoading] = useState(true);
-    // const [jobsError, setJobsError] = useState<string | null>(null);
+    const [jobsError, setJobsError] = useState<string | null>(null);
     const showToast = useCallback((message: string, type: ToastType) => {
         setToast({ message, type });
     }, []);
@@ -78,7 +78,7 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
         async (page: number = 1, append: boolean = false) => {
             try {
                 setJobsLoading(true);
-                // setJobsError(null);
+                setJobsError(null);
 
                 const response = await api.get<JobsResponse>(
                     "/content/jobs",
@@ -88,13 +88,13 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                 const { results, count, next } = response.data;
 
                 setJobs(prev => append ? [...prev, ...results] : results);
-                // setJobsCount(count);
+                setJobsCount(count);
                 setJobsNext(next);
                 setJobsPage(page);
                 console.log(response)
             } catch (error) {
                 console.error("Failed to fetch jobs:", error);
-                // setJobsError("Unable to load recent jobs. Please try again.");
+                setJobsError("Unable to load recent jobs. Please try again.");
             } finally {
                 setJobsLoading(false);
             }
@@ -198,6 +198,7 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                     onClose={() => setToast(null)}
                 />
             )}
+            {jobsError && <p className="text-red-500">{jobsError}</p>}
 
             <section className="bulk-hero">
                 <div>

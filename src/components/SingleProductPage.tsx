@@ -77,7 +77,7 @@ const SingleProductPage: React.FC<Props> = ({
     const [taskId, setTaskId] = useState<string | null>(
         null
     );
-    const [units, setUnits] = useState<number>(1);
+    const units = 1;
     const [loading, setLoading] = useState(false);
     const [output, setOutput] =
         useState<GeneratedOutput | null>(null);

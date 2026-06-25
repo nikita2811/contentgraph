@@ -48,7 +48,7 @@ export interface StatCard {
 interface User {
     id: number;
     email: string;
-    name: string;
+    name: string | null;
     avatar_url: string | null;
     last_login: string | null;
 }
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
     const [jobsLoading, setJobsLoading] = useState(true);
     const [jobsError, setJobsError] = useState<string | null>(null);
     const [stats, setStats] = useState<DashboardStats | null>(null);
-    const [user, setUser] = useState<User[]>([]);
+    const [user, setUser] = useState<User | null>(null);
     const statCards: StatCard[] = [
         {
             label: "Credits Used",
@@ -222,8 +222,8 @@ const Dashboard: React.FC = () => {
 
         return "Good evening";
     };
-    const firstName =
-        user?.name?.trim()?.split(" ")[0] || "User";
+    const firstName = user?.name?.split(" ")[0]?.trim() || "User";
+
     return (
         <div className="dashboard">
 
@@ -231,7 +231,7 @@ const Dashboard: React.FC = () => {
             <section className="dashboard-hero">
                 <div>
                     <h1>
-                        {getGreeting()}, {firstName}
+                        {getGreeting()}, {firstName}{profileLoading}
                         {" "}👋
                     </h1>
                     <p>
@@ -254,6 +254,7 @@ const Dashboard: React.FC = () => {
                         </span>
                     )}
                 </div>
+                {jobsError && <p className="text-red-500">{jobsError}</p>}
 
                 {jobsLoading && jobs.length === 0 ? (
                     <div className="dashboard-loading">
