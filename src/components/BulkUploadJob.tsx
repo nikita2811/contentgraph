@@ -190,7 +190,6 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
 
     return (
         <div className="bulk-page">
-            {/* Hero */}
             {toast && (
                 <Toast
                     message={toast.message}
@@ -198,8 +197,8 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                     onClose={() => setToast(null)}
                 />
             )}
-            {jobsError && <p className="text-red-500">{jobsError}</p>}
 
+            {jobsError && <p className="text-red-500">{jobsError}</p>}
             <section className="bulk-hero">
                 <div>
                     <h1>🚀 Bulk Product Generator</h1>
@@ -208,34 +207,26 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                         SEO-optimized descriptions in minutes.
                     </p>
                 </div>
-
                 <div className="bulk-credit-pill">
                     ⚡ {credits} Credits
                 </div>
             </section>
-
-            {/* Top Grid */}
             <section className="bulk-top-grid">
                 <div className="bulk-upload-card">
                     <h2>Upload CSV</h2>
-
                     <div className="bulk-dropzone">
                         <div className="bulk-upload-icon">☁️</div>
-
                         <h3>Drop CSV here</h3>
-
                         <p>
                             Upload up to 500 products and generate
                             descriptions in one click.
                         </p>
-
                         <input
                             id="csv-input"
                             type="file"
                             accept=".csv"
                             style={{ display: "none" }}
                             onChange={handleFileChange}
-
                         />
                         {!file ? (
                             <label htmlFor="csv-input" className="choose-file-btn">
@@ -252,34 +243,25 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                                 <button onClick={() => { setFile(null); setRowCount(null); setBalanceOk(null); }}>✕</button>
                             </span>
                         )}
-
-
-
                         <button onClick={handleUpload}>Upload</button>
-
                     </div>
                 </div>
-
-                {/* Analytics */}
                 <div className="bulk-stats-card">
                     <h2>Batch Analytics</h2>
-
                     <div className="bulk-stats-grid">
                         <div className="bulk-stat">
                             <span>Total Jobs</span>
-                            <strong>32</strong>
+                            {/* Bug 2 fix — use jobsCount from state, not hardcoded */}
+                            <strong>{jobsCount}</strong>
                         </div>
-
                         <div className="bulk-stat">
                             <span>Completed</span>
-                            <strong>28</strong>
+                            <strong>{jobs.filter(j => j.status === "completed").length}</strong>
                         </div>
-
                         <div className="bulk-stat">
                             <span>Processing</span>
-                            <strong>2</strong>
+                            <strong>{jobs.filter(j => j.status === "processing").length}</strong>
                         </div>
-
                         <div className="bulk-stat">
                             <span>Credits Used</span>
                             <strong>1284</strong>
@@ -287,13 +269,10 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                     </div>
                 </div>
             </section>
-
-            {/* Recent Jobs */}
             <section className="bulk-jobs-card">
                 {jobsLoading && jobs.length === 0 ? (
                     <div className="dashboard-loading">Loading jobs...</div>
                 ) : jobs.length > 0 ? (
-                    // Fix 2: wrap in a fragment, and Fix 3: render job_search not jobs
                     <>
                         <div className="bulk-card-header">
                             <h2>Recent Jobs</h2>
@@ -309,47 +288,44 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
                             <tbody>
-                                {jobs.filter((job) => job.type === "bulk")
-                                    .map((job) => (
-
-                                        <tr key={job.id}>
-                                            <td>{job.name}</td>
-
-                                            <td>
-                                                <span className="status done">
-                                                    {job.status}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <div className="progress-bar">
-                                                    <div
-                                                        className="progress-fill"
-
-                                                        style={{
-                                                            width: `${job.progress}%`,
-                                                        }}
-                                                    />
-                                                </div>
-                                            </td>
-
-                                            <td>{job.total_products}</td>
-
-                                            <td>
-                                                {job.status === "completed" && (
-                                                    <button className="action-btn" onClick={() => downloadJob(job.id)}>
-                                                        Download
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-
-
-                                    ))}
+                                {/* Bug 3 fix — uses memoized bulkJobs */}
+                                {jobs.map((job) => (
+                                    <tr key={job.id}>
+                                        <td>{job.name}</td>
+                                        <td>
+                                            {/* Bug 1 fix — dynamic status class */}
+                                            <span className={`status ${job.status}`}>
+                                                {job.status}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div className="progress-bar">
+                                                <div
+                                                    className="progress-fill"
+                                                    style={{ width: `${job.progress}%` }}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>{job.total_products}</td>
+                                        <td>
+                                            {job.status === "completed" && (
+                                                <button
+                                                    className="action-btn"
+                                                    onClick={() => downloadJob(job.id)}
+                                                > Download
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
+
+                        {/* Bug 2 (inline loader) fix — shows during Load More */}
+                        {jobsLoading && (
+                            <div className="dashboard-loading">Loading more...</div>
+                        )}
                         {jobsNext && (
                             <button
                                 onClick={handleLoadMore}
@@ -367,40 +343,6 @@ const BulkUploadPage: React.FC<Props> = ({ credits }) => {
                     </div>
                 )}
             </section>
-
-            {/* Activity
-            <section className="bulk-activity-card">
-                <h2>Recent Activity</h2>
-
-                <ul>
-                
-                    <li>
-                        ✅ Summer Collection completed
-                    </li>
-                    <li>
-                        ⚡ 120 descriptions generated
-                    </li>
-                    <li>📥 CSV downloaded</li>
-                    <li>
-                        💳 120 credits consumed
-                    </li>
-                </ul>
-            </section>
-
-            {/* Template 
-            <section className="bulk-template-card">
-                <h2>Need a Template?</h2>
-
-                <p>
-                    Download a ready-to-use CSV format
-                    and start generating descriptions
-                    immediately.
-                </p>
-
-                <button>
-                    Download CSV Template
-                </button>
-            </section> */}
         </div>
     );
 };

@@ -49,7 +49,7 @@ const JobHistoryPage = () => {
                     { params: { page, page_size: 10 } }
                 );
 
-                const { results, count, next } = response.data;
+                const { results, next } = response.data;
 
                 setJobs(prev => append ? [...prev, ...results] : results);
                 setJobsNext(next);
