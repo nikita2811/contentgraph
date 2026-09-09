@@ -16,7 +16,6 @@ import ResetPassword from "./components/Auth/SetNewPassword";
 
 
 import Dashboard from "./components/Dashboard";
-import { mockDashboardData } from "./components/types/MockData"
 import SingleProductPage from "./components/SingleProductPage";
 import BulkUploadPage from "./components/BulkUploadJob";
 import CreditsPage from "./components/CreditsPage";
