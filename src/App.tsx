@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import PublicRoute from "./context/PublicRoute";
 import ProtectedRoute from "./context/ProtectedRoute";
+import React, { useEffect, useState, useCallback } from "react";
 
 import AuthLayout from "./layouts/AuthLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -22,10 +23,37 @@ import CreditsPage from "./components/CreditsPage";
 import ApiKeysPage from "./components/ApiKeysPage";
 import JobHistoryPage from "./components/JobHistoryPage";
 import AccountDisabled from "./components/Auth/AccountDisabled";
+import { api } from "./api/axiosInstance"
 
+interface Wallet {
+  balance: number;
 
+}
 
 const App: React.FC = () => {
+
+
+
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+
+  const fetchUser = useCallback(async () => {
+    try {
+
+      const response = await api.get<Wallet>("/payment/wallet");
+
+      setWallet(response.data);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error loading user", error);
+    } finally {
+      console.log("wallet fetched")
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
 
   return (
@@ -62,11 +90,11 @@ const App: React.FC = () => {
               path="/single-product"
               element={
                 <SingleProductPage
-                  credits={mockDashboardData.creditsRemaining}
+                  credits={wallet?.balance ?? 0}
                 />
               }
             />
-            <Route path="/bulk-upload" element={<BulkUploadPage credits={mockDashboardData.creditsRemaining} />} />
+            <Route path="/bulk-upload" element={<BulkUploadPage credits={wallet?.balance ?? 0} />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
             <Route path="/api-keys" element={<ApiKeysPage />} />
             <Route path="/job-history" element={<JobHistoryPage />} />

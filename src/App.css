@@ -1697,3 +1697,54 @@ body {
     backdrop-filter: blur(3px);
   }
 }
+
+
+.candy-header__avatar--initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #dee0ff;
+  color: #3730a3;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.candy-header__skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: candy-skeleton-pulse 1.4s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.candy-header__skeleton--text {
+  width: 80px;
+  height: 12px;
+  margin-bottom: 4px;
+}
+
+.candy-header__skeleton--text-sm {
+  width: 60px;
+  height: 10px;
+}
+
+.candy-header__skeleton--avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+@keyframes candy-skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
