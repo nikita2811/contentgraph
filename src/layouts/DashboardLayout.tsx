@@ -4,6 +4,10 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import React, { useEffect, useState, useCallback } from "react";
 import { api } from "../api/axiosInstance"
+interface Wallet {
+    balance: number;
+
+}
 
 
 interface User {
@@ -34,10 +38,29 @@ const DashboardLayout: React.FC = () => {
             setProfileLoading(false);
         }
     }, []);
+    const [wallet, setWallet] = useState<Wallet | null>(null);
+
+    const fetchWallet = useCallback(async () => {
+        try {
+
+            const response = await api.get<Wallet>("/payment/wallet");
+
+            setWallet(response.data);
+
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error loading user", error);
+        } finally {
+            console.log("wallet fetched")
+        }
+    }, []);
 
     useEffect(() => {
         fetchUser();
-    }, [fetchUser]);
+        fetchWallet();
+    }, [fetchUser, fetchWallet]);
+
+
 
 
 
@@ -67,7 +90,7 @@ const DashboardLayout: React.FC = () => {
 
                 {/* Page content */}
                 <main className="dash-main">
-                    <Outlet />
+                    <Outlet context={{ wallet }} />
                 </main>
             </div>
         </div >

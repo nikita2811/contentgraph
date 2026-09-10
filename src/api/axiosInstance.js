@@ -92,7 +92,7 @@ api.interceptors.response.use(
 
                 localStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
-                // window.location.href = "/signin";
+                window.location.href = "/signin";
 
                 throw refreshError;
             } finally {

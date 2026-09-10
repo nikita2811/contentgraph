@@ -22,37 +22,16 @@ import CreditsPage from "./components/CreditsPage";
 import ApiKeysPage from "./components/ApiKeysPage";
 import JobHistoryPage from "./components/JobHistoryPage";
 import AccountDisabled from "./components/Auth/AccountDisabled";
-import { api } from "./api/axiosInstance"
+import { useOutletContext } from "react-router-dom";
 
-interface Wallet {
-  balance: number;
-
-}
-
-const App: React.FC = () => {
 
 
 
-  const [wallet, setWallet] = useState<Wallet | null>(null);
+const App: React.FC = () => {
+  const { wallet } = useOutletContext<{ wallet: { balance: number } | null }>();
 
-  const fetchUser = useCallback(async () => {
-    try {
 
-      const response = await api.get<Wallet>("/payment/wallet");
 
-      setWallet(response.data);
-
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error loading user", error);
-    } finally {
-      console.log("wallet fetched")
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
 
 
   return (
