@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import PublicRoute from "./context/PublicRoute";
 import ProtectedRoute from "./context/ProtectedRoute";
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 
 import AuthLayout from "./layouts/AuthLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
