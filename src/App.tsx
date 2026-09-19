@@ -39,7 +39,7 @@ const BulkUploadRoute: React.FC = () => {
 
 
 const App: React.FC = () => {
-  const { wallet } = useOutletContext<{ wallet: { balance: number } | null }>();
+
 
 
 
