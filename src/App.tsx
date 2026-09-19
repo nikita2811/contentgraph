@@ -22,14 +22,24 @@ import CreditsPage from "./components/CreditsPage";
 import ApiKeysPage from "./components/ApiKeysPage";
 import JobHistoryPage from "./components/JobHistoryPage";
 import AccountDisabled from "./components/Auth/AccountDisabled";
-import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 
+type WalletContext = { wallet: { balance: number } | null };
+
+const SingleProductRoute: React.FC = () => {
+  const { wallet } = useOutletContext<WalletContext>();
+  return <SingleProductPage credits={wallet?.balance ?? 0} />;
+};
+
+const BulkUploadRoute: React.FC = () => {
+  const { wallet } = useOutletContext<WalletContext>();
+  return <BulkUploadPage credits={wallet?.balance ?? 0} />;
+};
 
 
 const App: React.FC = () => {
-  const [wallet, setWallet] = useState<{ balance: number } | null>(null);
-
+  const { wallet } = useOutletContext<{ wallet: { balance: number } | null }>();
 
 
 
@@ -67,13 +77,9 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route
               path="/single-product"
-              element={
-                <SingleProductPage
-                  credits={wallet?.balance ?? 0}
-                />
-              }
+              element={<SingleProductRoute />}
             />
-            <Route path="/bulk-upload" element={<BulkUploadPage credits={wallet?.balance ?? 0} />} />
+            <Route path="/bulk-upload" element={<BulkUploadRoute />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
             <Route path="/api-keys" element={<ApiKeysPage />} />
             <Route path="/job-history" element={<JobHistoryPage />} />
