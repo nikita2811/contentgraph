@@ -22,13 +22,14 @@ import CreditsPage from "./components/CreditsPage";
 import ApiKeysPage from "./components/ApiKeysPage";
 import JobHistoryPage from "./components/JobHistoryPage";
 import AccountDisabled from "./components/Auth/AccountDisabled";
-import { useOutletContext } from "react-router-dom";
+import { useState } from "react";
 
 
 
 
 const App: React.FC = () => {
-  const { wallet } = useOutletContext<{ wallet: { balance: number } | null }>();
+  const [wallet, setWallet] = useState<{ balance: number } | null>(null);
+
 
 
 
